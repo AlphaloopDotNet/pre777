@@ -21,17 +21,15 @@ export const metadata: Metadata = {
   description: "777",
 };
 
-async function getData(userId:string)
-{ if(userId)
-  {
-    const data =await prisma.user.findUnique({
+async function getData(userId: string) {
+  if (userId) {
+    const data = await prisma.user.findUnique({
       where: {
-          id:userId,
+        id: userId,
       },
-  });
-  return data;
+    });
+    return data;
   }
- 
 }
 
 export default async function RootLayout({
@@ -39,13 +37,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const {getUser} = getKindeServerSession();
+  const { getUser } = getKindeServerSession();
   const user = await getUser();
   const data = await getData(user?.id as string);
   return (
-    <html lang="en">
-      <body
-      >  <Navbar/>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        {" "}
+        <Navbar />
         {children}
       </body>
     </html>

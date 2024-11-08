@@ -9,7 +9,11 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/api/predict",
-        destination: "http://127.0.0.1:5959/api/predict", 
+        destination: "http://127.0.0.1:5959/api/predict",
+      },
+      {
+        source: "/extract_text",
+        destination: "http://127.0.0.1:5959/extract_text",
       },
     ];
   },

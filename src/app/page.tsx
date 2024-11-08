@@ -1,6 +1,4 @@
-import { Navbar } from "@/components/Nav";
 import { Button } from "@/components/ui/button";
-import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { BenefitsContent } from "@/lib/constants";
 import { redirect } from "next/navigation";
@@ -23,9 +21,6 @@ export default async function Home() {
               Welcome to Pre777 <br />{" "}
               <span className="text-primary">Game prediction</span>
             </h1>
-            {/* <h1 className="text-3xl font-extrabold tracking-tight lg:text-5xl">
-            
-            </h1> */}
             <p className="max-w-xl mx-auto  text-base lg:text-xl text-secondary-foregound">
               Access the latest predictions and analyses from seasoned gamers to
               boost your performance.
@@ -38,7 +33,6 @@ export default async function Home() {
               </LoginLink>
             </div>
           </div>
-          {/* <div className="relative w-[400px] h-[400px] rounded-[100%]  bg-violet-900 z-1 top-[50%] left-[85%] transform -translate-x-1/2 -translate-y-1/2 blur-[180px] overflow-hidden"></div> */}
         </div>
         <div className="w-[300px] h-[300px] rounded-[100%] absolute bg-violet-700 z-1 top-[85%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 blur-[180px] "></div>
       </section>
@@ -61,7 +55,7 @@ export default async function Home() {
                     className="relative text-center space-y-2 "
                   >
                     <div className=" flex  items-center justify-center overflow-hidden rounded-xl border border-indigo-200  z-10  ">
-                      <img src="./1.jpg" alt="" />
+                      <img src={data.img} alt="" />
                     </div>
                     <div className="p-5 text-white- ">
                       <p className="h5 font-semibold">{data.title}</p>
@@ -80,44 +74,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      {/* <section
-        id="benefits"
-        className=" py-8  overflow-hidden bg-black/20  border-t "
-      >
-        <div className="relative px-4 sm:px-6 lg:px-16 z-50">
-          <div className="flex flex-col justify-between text-center space-y-16 items-center  py-16 lg:py-20 px-4">
-            <div className="flex flex-col justify-center items-center">
-              <p className=" text-5xl py-4 font-bold tracking-tight text-white lg:text-5xl">
-                <span className="text-primary">15+</span> Games
-              </p>
-            </div>
-            <div className="my-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:px-16 ">
-              {BenefitsContent &&
-                BenefitsContent.map((data) => (
-                  <div
-                    key={data.title}
-                    className="relative text-center space-y-2 "
-                  >
-                    <div className=" flex  items-center justify-center overflow-hidden rounded-xl border border-indigo-200  z-10  ">
-                      <img src="./1.jpg" alt="" />
-                    </div>
-                    <div className="p-5 text-white- ">
-                      <p className="h5 font-semibold">{data.title}</p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-            <div className="flex justify-center">
-              <LoginLink>
-                {" "}
-                <Button size="lg" className="w-full bg-primary">
-                  View More...
-                </Button>
-              </LoginLink>
-            </div>
-          </div>
-        </div>
-      </section> */}
+
       <Testimonial />
       <FooterSection />
     </>

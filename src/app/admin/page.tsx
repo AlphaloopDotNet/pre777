@@ -29,9 +29,10 @@ const calculatePlanEndTime = (planType: PlanType): string => {
   }
 };
 
-const formatDateTime = (dateString: string | null): string => { 
-  return dateString ? new Date(dateString).toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }) : "N/A"; 
-}; 
+const formatDateTime = (dateString: string | null): string => {
+  return dateString ? new Date(dateString).toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }) : "N/A";
+};
+
 const AdminPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
@@ -52,24 +53,16 @@ const AdminPage: React.FC = () => {
 
   const handlePlanTypeChange = (userId: string, newPlanType: PlanType) => {
     const newPlanEndTime = calculatePlanEndTime(newPlanType);
+    const isActive = newPlanType !== "Expired";
+    
     setUsers(
       users.map((user) =>
         user.id === userId
-          ? { ...user, planType: newPlanType, planEndTime: newPlanEndTime }
-          : user
-      )
-    );
-  };
-
-  const toggleUserStatus = (userId: string) => {
-    setUsers(
-      users.map((user) =>
-        user.id === userId
-          ? {
-              ...user,
-              isActive: !user.isActive,
-              planType: !user.isActive ? "Expired" : user.planType,
-              planEndTime: !user.isActive ? null : user.planEndTime,
+          ? { 
+              ...user, 
+              planType: newPlanType, 
+              planEndTime: newPlanType === "Expired" ? null : newPlanEndTime,
+              isActive: isActive
             }
           : user
       )
@@ -149,27 +142,24 @@ const AdminPage: React.FC = () => {
                       <option value="" disabled>
                         Select Plan
                       </option>
-                      {PlanTypes.filter((plan) => plan !== "Expired").map(
-                        (plan) => (
-                          <option key={plan} value={plan}>
-                            {plan}
-                          </option>
-                        )
-                      )}
+                      {PlanTypes.map((plan) => (
+                        <option key={plan} value={plan}>
+                          {plan}
+                        </option>
+                      ))}
                     </select>
                   ) : (
                     user.planType || "N/A"
                   )}
                 </td>
                 <td className="p-2">
-                  <button
-                    onClick={() => toggleUserStatus(user.id)}
+                  <span
                     className={`px-2 py-1 rounded-full ${
                       user.isActive ? "bg-green-600" : "bg-red-600"
                     }`}
                   >
                     {user.isActive ? "Active" : "Inactive"}
-                  </button>
+                  </span>
                 </td>
                 <td className="p-2">{formatDateTime(user.planEndTime)}</td>
                 <td className="p-2">
@@ -226,7 +216,7 @@ const AdminPage: React.FC = () => {
                   <option value="" disabled>
                     Select Plan
                   </option>
-                  {PlanTypes.filter((plan) => plan !== "Expired").map((plan) => (
+                  {PlanTypes.map((plan) => (
                     <option key={plan} value={plan}>
                       {plan}
                     </option>
@@ -238,14 +228,13 @@ const AdminPage: React.FC = () => {
             </div>
             <div className="mb-2">
               <strong>Status:</strong>{" "}
-              <button
-                onClick={() => toggleUserStatus(user.id)}
+              <span
                 className={`px-2 py-1 rounded-full ${
                   user.isActive ? "bg-green-600" : "bg-red-600"
                 }`}
               >
                 {user.isActive ? "Active" : "Inactive"}
-              </button>
+              </span>
             </div>
             <div className="mb-2">
               <strong>Plan End Time:</strong> {formatDateTime(user.planEndTime)}

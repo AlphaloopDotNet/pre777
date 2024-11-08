@@ -13,22 +13,27 @@ async function getData({
   firstName: string | undefined | null;
   lastName: string | undefined | null;
 }) {
-  const user = await prisma.user.findUnique({
+  // Check for an existing user by email to avoid duplicate entries
+  const existingUser = await prisma.user.findUnique({
     where: {
-      id: id,
+      email: email,
     },
   });
 
-  if (!user) {
-    const name = `${firstName ?? ""} ${lastName ?? ""}`;
-    await prisma.user.create({
-      data: {
-        id: id,
-        email: email,
-        name: name,
-      },
-    });
+  // If a user with this email already exists, do nothing
+  if (existingUser) {
+    return;
   }
+
+  // Create a new user if no matching email is found
+  const name = `${firstName ?? ""} ${lastName ?? ""}`;
+  await prisma.user.create({
+    data: {
+      id: id,
+      email: email,
+      name: name,
+    },
+  });
 }
 
 export default async function DashboardLayout({
@@ -41,15 +46,17 @@ export default async function DashboardLayout({
   if (!user) {
     return redirect("/");
   }
+
   await getData({
     email: user.email as string,
     firstName: user.given_name as string,
     id: user.id as string,
     lastName: user.family_name as string,
   });
+
   return (
     <>
-        <div className="flex-grow p-4 ">{children}</div>
+      <div className="flex-grow p-4">{children}</div>
     </>
   );
 }

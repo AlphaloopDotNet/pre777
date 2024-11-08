@@ -12,8 +12,9 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { userId, isActive, planEndTime } = await req.json();
+    const { userId, planType, planEndTime } = await req.json();
 
+    // Verify if the requesting user is an admin
     const dbUser = await prisma.user.findUnique({
       where: {
         email: user.email as string,
@@ -24,31 +25,38 @@ export async function POST(req: Request) {
       return new NextResponse("User not found", { status: 404 });
     }
 
-    const currentTime = new Date();
-    const planExpired = dbUser.planEndTime ? new Date(dbUser.planEndTime) <= currentTime : true;
+    // Handle plan expiration and status based on plan type
+    let updateData: any = {
+      planType,
+    };
 
-    if (planExpired) {
-      return NextResponse.json({
-        redirect: {
-          destination: '/payment',
-          permanent: false,
-        }
-      }, { status: 303 });
+    if (planType === "Expired") {
+      updateData = {
+        ...updateData,
+        isActive: false,
+        planEndTime: null,
+      };
+    } else {
+      updateData = {
+        ...updateData,
+        isActive: true,
+        planEndTime: planEndTime ? new Date(planEndTime) : undefined,
+      };
     }
 
     const updatedUser = await prisma.user.update({
       where: {
         id: userId,
       },
-      data: {
-        isActive,
-        planEndTime: planEndTime ? new Date(planEndTime) : undefined,
-      },
+      data: updateData,
     });
 
     return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user status:", error);
+    console.error("Error updating user:", error);
+    if (error instanceof Error) {
+      return new NextResponse(`Error: ${error.message}`, { status: 500 });
+    }
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

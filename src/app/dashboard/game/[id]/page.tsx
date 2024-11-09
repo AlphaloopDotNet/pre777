@@ -6,18 +6,20 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
 
 const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
-  const [game, setGame] = useState<{ gameId: number; gameName: string } | null>(
-    null
-  );
+  const [game, setGame] = useState<{ gameId: number; gameName: string } | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [message, setMessage] = useState("");
   const [output, setOutput] = useState("");
+  const [outputColor, setOutputColor] = useState(""); // State for color
   const [sequence, setSequence] = useState<string[]>([]);
-  
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [isTraining, setIsTraining] = useState(false);
+
+  // Get toast function from the custom hook
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -38,11 +40,12 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       inputValue !== "b"
     ) {
       setOutput("Please enter either 'A' or 'B'.");
+      setOutputColor(""); // No color needed for this message
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/predict", {
+      const response = await fetch("http://127.0.0.1:5959/api/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,9 +54,11 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       });
       const data = await response.json();
       setOutput(data.message);
+      setOutputColor(data.color);
+
       setSequence((prev) => {
-        const updatedSequence = [inputValue, ...prev]; // Adding the new character at the beginning
-        return updatedSequence.slice(0, 10); // Keep only the last 10 characters
+        const updatedSequence = [inputValue, ...prev];
+        return updatedSequence.slice(0, 10);
       });
       setInputValue("");
     } catch (error) {
@@ -65,7 +70,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
     setIsTraining(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/train", {
+      const response = await fetch("http://127.0.0.1:5959/api/train", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,12 +80,23 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       const data = await response.json();
       console.log("Train response:", data);
 
-      alert("Training completed successfully!");
+      // Show success toast
+      toast({
+        title: "Training completed successfully!",
+        description: "The model has been trained with your data.",
+      });
 
       const last10Chars = message.slice(-10);
       setSequence(last10Chars.split("").reverse());
     } catch (error) {
       console.error("Error during training:", error);
+
+      // Show error toast
+      toast({
+        title: "Training failed!",
+        description: "There was an issue with the training process.",
+        variant: "destructive", // You can style it as destructive (red) for errors
+      });
     } finally {
       setIsTraining(false);
     }
@@ -95,7 +111,11 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
 
   const handleExtractText = async () => {
     if (!pdfFile) {
-      alert("Please upload a PDF file first.");
+      toast({
+        title: "No file selected!",
+        description: "Please upload a PDF file first.",
+        variant: "destructive", // Red toast for error
+      });
       return;
     }
 
@@ -103,7 +123,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
     formData.append("file", pdfFile);
 
     try {
-      const response = await fetch("http://localhost:3000/extract_text", {
+      const response = await fetch("http://127.0.0.1:5959/extract_text", {
         method: "POST",
         body: formData,
       });
@@ -116,6 +136,13 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       setMessage(data.text);
     } catch (error) {
       console.error("Error extracting text:", error);
+
+      // Show error toast for failed extraction
+      toast({
+        title: "Error extracting text!",
+        description: "Failed to extract text from the PDF file.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -153,7 +180,15 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
             </span>
           </div>
           <div className="aspect-video rounded-md bg-muted/30 flex items-center justify-center">
-            <span className="text-3xl font-bold text-yellow-500">{output}</span>
+            <span
+              className="text-3xl font-bold p-4 rounded-md"
+              style={{
+                color: outputColor,
+                backgroundColor: outputColor ? "#00000080" : "", // Dark background if color is set
+              }}
+            >
+              {output || "Waiting for prediction..."}
+            </span>
           </div>
         </div>
 
@@ -162,7 +197,13 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
           {sequence.map((letter, index) => (
             <span
               key={index}
-              className="rounded-md bg-muted/50 py-2 text-lg font-medium  text-red-500"
+              className={`rounded-md bg-muted/50 py-2 text-lg font-bold ${
+                letter === "A"
+                  ? "text-red-500"
+                  : letter === "B"
+                  ? "text-yellow-500"
+                  : ""
+              }`}
             >
               {letter}
             </span>
@@ -219,6 +260,8 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       </div>
+
+      {/* Toast notification container will be handled automatically by the useToast hook */}
     </>
   );
 };

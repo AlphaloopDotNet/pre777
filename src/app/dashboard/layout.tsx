@@ -1,6 +1,7 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import prisma from "../lib/db";
+import { Toaster } from "@/components/ui/toaster"
 
 async function getData({
   email,
@@ -56,7 +57,9 @@ export default async function DashboardLayout({
 
   return (
     <>
-      <div className="flex-grow p-4">{children}</div>
+      <div className="flex-grow p-4">{children}
+      <Toaster />
+      </div>
     </>
   );
 }

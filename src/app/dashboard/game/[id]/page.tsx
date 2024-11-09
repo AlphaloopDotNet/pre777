@@ -161,9 +161,6 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
         <h1 className="text-center bg-secondary mx-auto rounded-md p-2 max-w-lg font-bold text-xl">
           {game.gameName}
         </h1>
-        <h1 className="text-center text-yellow-500 mx-auto max-w-lg font-bold text-3xl">
-          (World 777/ Diamond Exchange/ Copy Website)
-        </h1>
 
         <div className="grid md:grid-cols-2 gap-4">
           <div className="relative aspect-video rounded-md bg-muted/50 text-3xlflex items-center justify-center">
@@ -229,28 +226,28 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
         <Separator />
 
         <div className="flex mx-4 gap-4 items-start justify-center">
-          <input
+          <Input
             type="file"
             accept=".pdf"
             onChange={handleFileChange}
             className="p-2 border rounded-md"
           />
           <div className="flex flex-col gap-4 items-center justify-center">
-            <Button onClick={handleExtractText}>Extract Text from PDF</Button>
+            <Button onClick={handleExtractText}>Extract the Data</Button>
           </div>
         </div>
 
         <div className="flex mx-4 gap-4 items-start justify-center">
           <Textarea
-            placeholder="Type your message here."
             id="message"
-            className="flex-grow p-3 border rounded-md max-w-2xl min-h-[200px]"
+            className="flex-grow p-3 border rounded-md max-w-2xl min-h-[20px]"
             value={message}
             onChange={(e) => {
               setMessage(e.target.value);
               const last10Chars = e.target.value.slice(-10);
               setSequence(last10Chars.split(""));
             }}
+            readOnly // Make the Textarea read-only
           />
 
           <div className="flex flex-col gap-4 items-center justify-center">
@@ -260,8 +257,6 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       </div>
-
-      {/* Toast notification container will be handled automatically by the useToast hook */}
     </>
   );
 };

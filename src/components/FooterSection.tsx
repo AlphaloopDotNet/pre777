@@ -8,7 +8,7 @@ const FooterSection = () => {
         {/* <h1 className="font-bold text-3xl">
           Pre<span className="text-primary">777</span>
         </h1>{" "} */}
-        <Image src={"/PRE.png"} width={100} height={200} alt="pre777"></Image>
+        <Image src={"/logo7.png"} width={100} height={200} alt="pre777"></Image>
 
         <p className="text-white/70 text-sm ">
           Copyright © 2024{" "}

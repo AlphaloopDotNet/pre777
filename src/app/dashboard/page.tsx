@@ -1,12 +1,10 @@
-
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import prisma from "@/app/lib/db";
 import GameCard from "@/components/GameCard";
 
 export default async function DashboardPage() {
-  const { getUser, isAuthenticated } = getKindeServerSession();
+  const { getUser, isAuthenticated, getRoles } = getKindeServerSession();
   const user = await getUser();
-  const isAuthed = await isAuthenticated();
 
   const dbUser = await prisma.user.findUnique({
     where: {
@@ -18,11 +16,31 @@ export default async function DashboardPage() {
       planType: true,
     },
   });
+  const now = new Date();
+  let planStatusMessage = "";
 
+  if (dbUser?.planEndTime) {
+    const planEndDate = new Date(dbUser.planEndTime);
+
+    // Handle daily plan expiration by checking if the plan end date is not today
+    if (dbUser.planType === "Daily") {
+      const isNewDay =
+        now.getUTCDate() !== planEndDate.getUTCDate() ||
+        now.getUTCMonth() !== planEndDate.getUTCMonth() ||
+        now.getUTCFullYear() !== planEndDate.getUTCFullYear();
+
+      if (isNewDay) {
+        planStatusMessage =
+          "Your daily plan has expired. Please renew your plan.";
+      }
+    } else if (now > planEndDate) {
+      // For other plans, check if the current date is past the plan's end date
+      planStatusMessage = "Your plan has expired. Please renew your plan.";
+    }
+  }
   return (
     <div className="flex flex-1 flex-col gap-2 p-4">
       <h2 className="text-xl font-semibold">Dashboard</h2>
-
       {/* Display Plan Information */}
       <div className="bg-gray-800 p-4 rounded-md shadow-md my-2">
         <h3 className="font-semibold">

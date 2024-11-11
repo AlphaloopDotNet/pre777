@@ -17,7 +17,7 @@ export default async function Home() {
     <>
       {" "}
       <VelocityScroll
-        text="Prediction for World777 / Diamond Exchange / All Copy Website"
+        text="Prediction for World777 / Diamond Exchange / All Copy Website /"
         default_velocity={1}
         className="font-display text-center text-lg font-bold tracking-[-0.02em] text-yellow-400 drop-shadow-sm  dark:text-white md:text-3xl md:leading-[3rem]"
       />

@@ -16,7 +16,7 @@ export async function Navbar() {
     <nav className="border-b bg-background px-5 flex items-center justify-center">
       <div className="container flex items-center justify-between mx-4">
         <Link href="/">
-          <Image src={"/PRE.png"} width={100} height={100} alt="pre777"></Image>
+          <Image src={"/logo7.png"} width={100} height={100} alt="pre777"></Image>
           {/* <h1 className="font-bold text-3xl">
             Pre<span className="text-primary">777</span>
           </h1> */}

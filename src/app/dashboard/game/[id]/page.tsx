@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Games } from "../../constants";
-import { Textarea } from "@/components/ui/textarea";
+import { Games } from "@/lib/constants";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -89,7 +88,6 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
     }
   };
   const processTextForTraining = (text: string) => {
-    // Convert text to only A and B characters
     return text
       .toUpperCase()
       .split("")
@@ -101,7 +99,6 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
     setIsTraining(true);
 
     try {
-      // Process the text to contain only A and B
       const processedSequence = processTextForTraining(textToTrain);
 
       if (!processedSequence) {
@@ -114,7 +111,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*", // Add this if your backend supports it
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({ sequence: processedSequence }),
       });
@@ -221,7 +218,6 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
     </div>
   );
-  // Rest of your component remains the same...
   if (!game) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -234,7 +230,6 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <>
       {(isProcessing || isTraining) && <LoadingOverlay />}
-
       <div className="space-y-4 pr-4">
         <h1 className="text-center  mx-auto rounded-md p-2 max-w-lg font-bold text-xl">
           {game.gameName}

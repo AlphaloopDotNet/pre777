@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import prisma from '@/app/lib/db';
+import prisma from "@/app/lib/db";
+import { unstable_noStore as noStore } from "next/cache";
 
 export async function POST(req: Request) {
+  noStore();
   try {
     const { getUser, isAuthenticated } = getKindeServerSession();
     const isAuthed = await isAuthenticated();

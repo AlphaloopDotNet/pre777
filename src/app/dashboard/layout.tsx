@@ -1,7 +1,8 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import prisma from "../lib/db";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
+import { unstable_noStore as noStore } from "next/cache";
 
 async function getData({
   email,
@@ -14,6 +15,7 @@ async function getData({
   firstName: string | undefined | null;
   lastName: string | undefined | null;
 }) {
+  noStore();
   // Check for an existing user by email to avoid duplicate entries
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -57,8 +59,9 @@ export default async function DashboardLayout({
 
   return (
     <>
-      <div className="flex-grow p-4">{children}
-      <Toaster />
+      <div className="flex-grow p-4">
+        {children}
+        <Toaster />
       </div>
     </>
   );

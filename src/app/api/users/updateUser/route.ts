@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { PlanType } from "@prisma/client";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { unstable_noStore as noStore } from "next/cache";
 
 export async function POST(req: Request) {
+  noStore();
   try {
     const session = getKindeServerSession();
     const user = await session.getUser();
@@ -17,8 +19,10 @@ export async function POST(req: Request) {
 
     const { userId, planType, planEndTime, isActive } = await req.json();
 
-    const targetUserRecord = await prisma.user.findUnique({ where: { id: userId } });
-    
+    const targetUserRecord = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
     if (!targetUserRecord) {
       return NextResponse.json(
         { message: "Target user not found in the database" },
@@ -60,7 +64,10 @@ export async function POST(req: Request) {
     }
 
     if (Object.keys(updateData).length === 0) {
-      return NextResponse.json({ message: "No fields updated" }, { status: 200 });
+      return NextResponse.json(
+        { message: "No fields updated" },
+        { status: 200 }
+      );
     }
 
     const updatedUser = await prisma.user.update({
@@ -69,16 +76,17 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(updatedUser, { status: 200 });
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Error updating user:", error.message);
-    
-   return NextResponse.json(
+
+    return NextResponse.json(
       { message: `Failed to update user due to error` },
       { status: 500 }
-   );
+    );
   }
 }
 
 export function GET() {
+  noStore();
   return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
 }

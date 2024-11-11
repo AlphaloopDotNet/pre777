@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { PlanType } from "@prisma/client";
+import { unstable_noStore as noStore } from "next/cache";
 
 interface User {
   id: string;
@@ -30,13 +31,21 @@ const calculatePlanEndTime = (planType: PlanType): string => {
 };
 
 const formatDateTime = (dateString: string | null): string => {
-  return dateString ? new Date(dateString).toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }) : "N/A";
+  return dateString
+    ? new Date(dateString).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+    : "N/A";
 };
 
 const AdminPage: React.FC = () => {
+  noStore();
   const [users, setUsers] = useState<User[]>([]);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>(""); // New state for search term
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -51,18 +60,26 @@ const AdminPage: React.FC = () => {
     setEditingUserId(userId);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   const handlePlanTypeChange = (userId: string, newPlanType: PlanType) => {
     const newPlanEndTime = calculatePlanEndTime(newPlanType);
     const isActive = newPlanType !== "Expired";
-    
+
     setUsers(
       users.map((user) =>
         user.id === userId
-          ? { 
-              ...user, 
-              planType: newPlanType, 
+          ? {
+              ...user,
+              planType: newPlanType,
               planEndTime: newPlanType === "Expired" ? null : newPlanEndTime,
-              isActive: isActive
+              isActive: isActive,
             }
           : user
       )
@@ -107,12 +124,30 @@ const AdminPage: React.FC = () => {
   const handleCancel = () => {
     setEditingUserId(null);
   };
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto p-4">
       <h2 className="text-xl font-semibold mb-4">User Management</h2>
-
-      {/* Desktop Table View */}
+      <div className="mb-4 flex items-center space-x-2">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search by name or email"
+          className="w-full p-2 border border-primary rounded text-black"
+        />
+        {searchTerm && (
+          <button
+            onClick={handleClearSearch}
+            className="p-2 bg-primary text-white rounded"
+          >
+            Clear
+          </button>
+        )}
+      </div>
       <div className="hidden md:block">
         <table className="min-w-full border">
           <thead>
@@ -126,7 +161,7 @@ const AdminPage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <tr key={user.id} className="border-t">
                 <td className="p-2">{user.name}</td>
                 <td className="p-2">{user.email}</td>
@@ -135,7 +170,10 @@ const AdminPage: React.FC = () => {
                     <select
                       value={user.planType || ""}
                       onChange={(e) =>
-                        handlePlanTypeChange(user.id, e.target.value as PlanType)
+                        handlePlanTypeChange(
+                          user.id,
+                          e.target.value as PlanType
+                        )
                       }
                       className="bg-gray-900 p-1 rounded"
                     >
@@ -195,7 +233,7 @@ const AdminPage: React.FC = () => {
 
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
-        {users.map((user) => (
+        {filteredUsers.map((user) => (
           <div key={user.id} className="border p-4 rounded-lg shadow">
             <div className="mb-2">
               <strong>Name:</strong> {user.name}

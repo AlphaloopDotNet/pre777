@@ -82,7 +82,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
 
       // Show success toast
       toast({
-        title: "Training completed successfully!",
+        title: "Connecting completed successfully!",
         description: "The model has been trained with your data.",
       });
 
@@ -95,7 +95,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       toast({
         title: "Training failed!",
         description: "There was an issue with the training process.",
-        variant: "destructive", // You can style it as destructive (red) for errors
+        variant: "destructive", 
       });
     } finally {
       setIsTraining(false);
@@ -114,7 +114,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       toast({
         title: "No file selected!",
         description: "Please upload a PDF file first.",
-        variant: "destructive", // Red toast for error
+        variant: "destructive", 
       });
       return;
     }
@@ -247,12 +247,12 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
               const last10Chars = e.target.value.slice(-10);
               setSequence(last10Chars.split(""));
             }}
-            readOnly // Make the Textarea read-only
+            readOnly 
           />
 
           <div className="flex flex-col gap-4 items-center justify-center">
             <Button onClick={handleTrain} disabled={isTraining}>
-              {isTraining ? "Training..." : "Set/Train"}
+              {isTraining ? "Connecting..." : "Connect with Server"}
             </Button>
           </div>
         </div>

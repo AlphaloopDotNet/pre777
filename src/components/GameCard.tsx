@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { MdOutlineWhatsapp } from "react-icons/md";
 import { AlertCircle } from "lucide-react";
 
 interface GameCardProps {
@@ -20,7 +21,13 @@ interface GameCardProps {
   isComingSoon?: boolean;
 }
 
-const GameCard = ({ isActive, gameId, imageSrc, imageAlt, isComingSoon }: GameCardProps) => {
+const GameCard = ({
+  isActive,
+  gameId,
+  imageSrc,
+  imageAlt,
+  isComingSoon,
+}: GameCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   if (isActive && !isComingSoon) {
@@ -42,8 +49,8 @@ const GameCard = ({ isActive, gameId, imageSrc, imageAlt, isComingSoon }: GameCa
   return (
     <>
       <div className="aspect-video rounded-md bg-muted/50 overflow-hidden">
-        <div 
-          onClick={() => !isComingSoon && setIsDialogOpen(true)} 
+        <div
+          onClick={() => !isComingSoon && setIsDialogOpen(true)}
           className="cursor-pointer relative"
         >
           <img
@@ -55,7 +62,9 @@ const GameCard = ({ isActive, gameId, imageSrc, imageAlt, isComingSoon }: GameCa
           />
           {isComingSoon && (
             <div className="absolute inset-0 bg-black/75 flex items-center justify-center">
-              <span className="text-white text-3xl font-bold">Coming Soon...</span>
+              <span className="text-white text-3xl font-bold">
+                Coming Soon...
+              </span>
             </div>
           )}
         </div>
@@ -69,18 +78,20 @@ const GameCard = ({ isActive, gameId, imageSrc, imageAlt, isComingSoon }: GameCa
               Active Plan Required
             </DialogTitle>
             <DialogDescription className="pt-4">
-              You need an active plan to access this game. Please purchase a plan to continue.
-            </DialogDescription>
-            <DialogDescription className="pt-4">
-              <strong>Click on Purchase Plan to continue OR Contact on : +91-6377448453</strong>
+              You need an active plan to access this game. Please purchase a
+              plan on Whatsapp to continue.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-4 pt-4">
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
-            <Link href="/payment">
-              <Button>Purchase Plan</Button>
+            <Link href="https://wa.me/6377448453?text=Hey%20tell%20me%20about%20the%20plans!!!">
+              <Button className="flex items-center gap-2">
+                <MdOutlineWhatsapp className="text-green-100 text-2xl" />{" "}
+                {/* Define width and height */}
+                Purchase Plan
+              </Button>
             </Link>
           </div>
         </DialogContent>

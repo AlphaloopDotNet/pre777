@@ -71,6 +71,9 @@ const GameCard = ({ isActive, gameId, imageSrc, imageAlt, isComingSoon }: GameCa
             <DialogDescription className="pt-4">
               You need an active plan to access this game. Please purchase a plan to continue.
             </DialogDescription>
+            <DialogDescription className="pt-4">
+              <strong>Click on Purchase Plan to continue OR Contact on : +91-6377448453</strong>
+            </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-4 pt-4">
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>

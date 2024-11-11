@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Testimonial } from "@/components/Testimonial";
 import FooterSection from "@/components/FooterSection";
+import { VelocityScroll } from "@/components/ui/scroll-based-velocity";
 
 export default async function Home() {
   const { isAuthenticated } = getKindeServerSession();
@@ -14,6 +15,12 @@ export default async function Home() {
   }
   return (
     <>
+      {" "}
+      <VelocityScroll
+        text="Prediction for World777 / Diamond Exchange / All Copy Website"
+        default_velocity={1}
+        className="font-display text-center text-lg font-bold tracking-[-0.02em] text-yellow-400 drop-shadow-sm  dark:text-white md:text-3xl md:leading-[3rem]"
+      />
       <section className="flex-items-center justify-center  mx-4 md:mx-8 my-4 py-24 md:py-40 overflow-hidden">
         <div className="relative item-center w-full  mx-auto lg-px-16 max-w-full md-px-12 ">
           <div className="w-full mx-auto text-center items-center space-y-8 ">
@@ -74,7 +81,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       <Testimonial />
       <FooterSection />
     </>

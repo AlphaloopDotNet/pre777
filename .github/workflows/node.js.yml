@@ -29,7 +29,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+
       - run: npm ci
+
       - run: npm run build --if-present
 
       - name: Change Directory
@@ -40,11 +42,11 @@ jobs:
           cd /home/pre777com/htdocs/www.pre777.com/actions-runner/_work/pre777/pre777
           pm2 restart 0 --update-env
         env:
-        KINDE_CLIENT_ID: ${{secrets.KINDE_CLIENT_ID}}
-        KINDE_CLIENT_SECRET: ${{secrets.KINDE_CLIENT_SECRET}}
-        KINDE_ISSUER_URL: ${{secrets.KINDE_ISSUER_URL}}
-        KINDE_SITE_URL: ${{secrets.KINDE_SITE_URL}}
-        KINDE_POST_LOGOUT_REDIRECT_URL: ${{secrets.KINDE_POST_LOGOUT_REDIRECT_URL}}
-        KINDE_POST_LOGIN_REDIRECT_URL: ${{secrets.KINDE_POST_LOGIN_REDIRECT_URL}}
-        DATABASE_URL: ${{secrets.DATABASE_URL}}
-        DIRECT_URL: ${{secrets.DIRECT_URL}}
+          KINDE_CLIENT_ID: ${{secrets.KINDE_CLIENT_ID}}
+          KINDE_CLIENT_SECRET: ${{secrets.KINDE_CLIENT_SECRET}}
+          KINDE_ISSUER_URL: ${{secrets.KINDE_ISSUER_URL}}
+          KINDE_SITE_URL: ${{secrets.KINDE_SITE_URL}}
+          KINDE_POST_LOGOUT_REDIRECT_URL: ${{secrets.KINDE_POST_LOGOUT_REDIRECT_URL}}
+          KINDE_POST_LOGIN_REDIRECT_URL: ${{secrets.KINDE_POST_LOGIN_REDIRECT_URL}}
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+          DIRECT_URL: ${{secrets.DIRECT_URL}}

@@ -1,4 +1,4 @@
-import { PrismaClient, PlanType } from "@prisma/client";
+import { PlanType } from "@prisma/client";
 import prisma from "@/app/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
 

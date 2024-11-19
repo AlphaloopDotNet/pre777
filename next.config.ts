@@ -4,7 +4,6 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["avatar.vercel.sh"],
   },
-  unoptimized: true,
   productionBrowserSourceMaps: false,
 };
 

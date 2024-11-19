@@ -35,7 +35,7 @@ const GameCard = ({
     return (
       <div className="aspect-video rounded-md bg-muted/50 overflow-hidden">
         <Link href={`/dashboard/game/${gameId}`}>
-          <img
+          <Image
             width={100}
             height={100}
             src={imageSrc}

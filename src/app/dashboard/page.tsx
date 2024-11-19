@@ -46,7 +46,7 @@ export default async function DashboardPage() {
         <GameCard
           isActive={dbUser?.isActive ?? false}
           gameId={1}
-          imageSrc="teen20.jpg"
+          imageSrc="/1.jpg"
           imageAlt="teenpati-2020"
         />
 

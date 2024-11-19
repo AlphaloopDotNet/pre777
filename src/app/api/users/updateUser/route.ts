@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server"; 
 import { PlanType } from "@prisma/client";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -76,11 +76,21 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(updatedUser, { status: 200 });
-  } catch (error: any) {
-    console.error("Error updating user:", error.message);
+  } catch (error: unknown) { // Use `unknown` instead of `any`
+    if (error instanceof Error) {
+      console.error("Error updating user:", error.message);
+
+      return NextResponse.json(
+        { message: `Failed to update user: ${error.message}` },
+        { status: 500 }
+      );
+    }
+
+    // Handle non-Error objects in `error`
+    console.error("Unexpected error:", error);
 
     return NextResponse.json(
-      { message: `Failed to update user due to error` },
+      { message: "Failed to update user due to an unknown error" },
       { status: 500 }
     );
   }

@@ -1,7 +1,6 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { unstable_noStore as noStore } from "next/cache";
 
 // Array of admin emails
 const ADMIN_EMAILS = [
@@ -11,7 +10,6 @@ const ADMIN_EMAILS = [
 ];
 
 export async function middleware(request: NextRequest) {
-  noStore();
   const { isAuthenticated, getUser } = getKindeServerSession();
   const path = request.nextUrl.pathname;
 

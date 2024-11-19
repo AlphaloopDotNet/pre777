@@ -1,10 +1,8 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import prisma from "@/app/lib/db";
 import GameCard from "@/components/GameCard";
-import { unstable_noStore as noStore } from "next/cache";
 
 export default async function DashboardPage() {
-  noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 

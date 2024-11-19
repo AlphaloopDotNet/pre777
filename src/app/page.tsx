@@ -6,6 +6,7 @@ import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Testimonial } from "@/components/Testimonial";
 import FooterSection from "@/components/FooterSection";
 import { VelocityScroll } from "@/components/ui/scroll-based-velocity";
+import Image from "next/image";
 
 export default async function Home() {
   const { isAuthenticated } = getKindeServerSession();
@@ -62,7 +63,7 @@ export default async function Home() {
                     className="relative text-center space-y-2 "
                   >
                     <div className=" flex  items-center justify-center overflow-hidden rounded-xl border border-indigo-200  z-10  ">
-                      <img src={data.img} alt="" />
+                      <Image src={data.img} alt="" width={300} height={300} />
                     </div>
                     <div className="p-5 text-white- ">
                       <p className="h5 font-semibold">{data.title}</p>

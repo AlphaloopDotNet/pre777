@@ -1,7 +1,12 @@
+// File path: ./src/app/api/users/update-status/route.ts
 import { NextResponse } from "next/server";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import prisma from "@/app/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
+import { Prisma, PlanType } from "@prisma/client"; // Import Prisma-generated types
+
+// Define the type for updateData based on Prisma schema
+type UpdateData = Prisma.UserUpdateInput;
 
 export async function POST(req: Request) {
   noStore();
@@ -28,23 +33,11 @@ export async function POST(req: Request) {
     }
 
     // Handle plan expiration and status based on plan type
-    let updateData: any = {
-      planType,
+    const updateData: UpdateData = {
+      planType: planType as PlanType, // Cast planType to PlanType enum
+      isActive: planType === "Expired" ? false : true,
+      planEndTime: planType === "Expired" ? null : planEndTime ? new Date(planEndTime) : undefined,
     };
-
-    if (planType === "Expired") {
-      updateData = {
-        ...updateData,
-        isActive: false,
-        planEndTime: null,
-      };
-    } else {
-      updateData = {
-        ...updateData,
-        isActive: true,
-        planEndTime: planEndTime ? new Date(planEndTime) : undefined,
-      };
-    }
 
     const updatedUser = await prisma.user.update({
       where: {

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       );
     }
 
-    let updateData: Partial<typeof targetUserRecord> = {};
+    const updateData: Partial<typeof targetUserRecord> = {};
 
     if (typeof isActive === "boolean") {
       updateData.isActive = isActive;

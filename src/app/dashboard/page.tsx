@@ -5,7 +5,7 @@ import { unstable_noStore as noStore } from "next/cache";
 
 export default async function DashboardPage() {
   noStore();
-  const { getUser, isAuthenticated, getRoles } = getKindeServerSession();
+  const { getUser } = getKindeServerSession();
   const user = await getUser();
 
   const dbUser = await prisma.user.findUnique({
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
               key={gameIndex}
               isActive={dbUser?.isActive ?? false}
               gameId={gameIndex}
-              imageSrc={`${gameIndex}.jpg`}
+              imageSrc={`/${gameIndex}.jpg`}
               imageAlt={`Image ${gameIndex}`}
               isComingSoon={true}
             />

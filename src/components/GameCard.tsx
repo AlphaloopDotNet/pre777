@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MdOutlineWhatsapp } from "react-icons/md";
 import { AlertCircle } from "lucide-react";
+import Image from "next/image";
 
 interface GameCardProps {
   isActive: boolean;
@@ -53,7 +54,7 @@ const GameCard = ({
           onClick={() => !isComingSoon && setIsDialogOpen(true)}
           className="cursor-pointer relative"
         >
-          <img
+          <Image
             width={100}
             height={100}
             src={imageSrc}

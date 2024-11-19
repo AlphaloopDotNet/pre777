@@ -12,8 +12,6 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
   const [game, setGame] = useState<{ gameId: number; gameName: string } | null>(
     null
   );
-  const [inputValue, setInputValue] = useState("");
-  const [message, setMessage] = useState("");
   const [output, setOutput] = useState("");
   const [outputColor, setOutputColor] = useState("");
   const [sequence, setSequence] = useState<string[]>([]);
@@ -190,8 +188,6 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       if (!processedText) {
         throw new Error("No valid sequence found in the extracted text");
       }
-
-      setMessage(processedText);
 
       // Train with the processed text
       await handleTrain(processedText);

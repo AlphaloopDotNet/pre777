@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DoorClosed, Home, Settings } from "lucide-react";
+import { DoorClosed } from "lucide-react";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 export function UserNav({
@@ -24,7 +24,10 @@ export function UserNav({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className=" px-2 relative h-10 w-10 rounded-full">
+          <Button
+            variant="ghost"
+            className=" px-2 relative h-10 w-10 rounded-full"
+          >
             <Avatar className="h-10 w-10 rounded-full">
               <AvatarImage src={image} alt="User avatar" />
               <AvatarFallback>{name.substring(0, 1)}</AvatarFallback>
@@ -41,7 +44,7 @@ export function UserNav({
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-      
+
           <DropdownMenuItem
             className="w-full flex justify-between items-center"
             asChild

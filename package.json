@@ -5,6 +5,7 @@
   "scripts": {
     "flask-dev": "python api/app.py",
     "flask-prod": "python api/app.py",
+    "clean": "rm -rf .next/cache/*",
     "py-install": "pip install -r requirements.txt",
     "next-dev": "next dev",
     "next-prod": "next start -p 3001",

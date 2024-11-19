@@ -12,6 +12,8 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
   const [game, setGame] = useState<{ gameId: number; gameName: string } | null>(
     null
   );
+  const [inputValue, setInputValue] = useState("");
+  const [message, setMessage] = useState("");
   const [output, setOutput] = useState("");
   const [outputColor, setOutputColor] = useState("");
   const [sequence, setSequence] = useState<string[]>([]);
@@ -45,9 +47,9 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       setOutputColor("");
       return;
     }
-
+  
     setIsPredicting(true);
-
+  
     try {
       const response = await fetch("http://127.0.0.1:5959/api/predict", {
         method: "POST",
@@ -57,20 +59,27 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
         },
         body: JSON.stringify({ last_char: selectedValue.toUpperCase() }),
       });
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
       setOutput(data.message);
       setOutputColor(data.color);
-
+  
       setSequence((prev) => {
         const updatedSequence = [selectedValue.toUpperCase(), ...prev];
         return updatedSequence.slice(0, 10);
       });
       setSelectedValue("");
+  
+      // after 25 secOOOnds
+      setTimeout(() => {
+        setOutput("");
+        setOutputColor(""); 
+      }, 25000);
+  
     } catch (error) {
       console.error("Error during prediction:", error);
       toast({
@@ -78,13 +87,14 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
         description:
           error instanceof Error
             ? error.message
-            : "There was an issue with the prediction .",
+            : "There was an issue with the prediction.",
         variant: "destructive",
       });
     } finally {
       setIsPredicting(false);
     }
   };
+  
   const processTextForTraining = (text: string) => {
     return text
       .toUpperCase()
@@ -123,8 +133,8 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
       console.log("Train response:", data);
 
       toast({
-        title: "Connecting completed successfully!",
-        description: "The model has been trained with your data.",
+        title: "Connected successfully!",
+        description: "You can use software for prediction",
       });
 
       // Update sequence with last 10 valid characters
@@ -189,6 +199,8 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
         throw new Error("No valid sequence found in the extracted text");
       }
 
+      setMessage(processedText);
+
       // Train with the processed text
       await handleTrain(processedText);
     } catch (error) {
@@ -209,8 +221,8 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center space-y-4">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-lg font-semibold text-primary">Processing Data...</p>
-        <p className="text-lg font-semibold text-primary">wait for sec...</p>
+        <p className="text-lg font-semibold text-primary">Connecting to server</p>
+        <p className="text-lg font-semibold text-primary">Wait..</p>
       </div>
     </div>
   );
@@ -263,7 +275,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
 
         {/* Normal Sequence */}
-        <div className="grid gap-4 grid-cols-3 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 text-center py-4">
+        <div className="grid gap-4 grid-cols-10 sm:grid-cols-10 md:grid-cols-10 lg:grid-cols-10 text-center py-4">
           {sequence.map((letter, index) => (
             <span
               key={index}
@@ -284,7 +296,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
 
         <div className="flex flex-col gap-6 items-center justify-between px-4 py-8 sm:px-6 sm:py-10 lg:flex-row lg:gap-8 lg:mx-16">
           {/* Choice Buttons */}
-          <div className="flex flex-col gap-4 items-center justify-center sm:flex-row">
+          <div className="flex  gap-4 items-center justify-center ">
             <Button
               onClick={() => handleChoice("A")}
               variant={selectedValue === "A" ? "default" : "outline"}
@@ -336,7 +348,7 @@ const GamePage = ({ params }: { params: Promise<{ id: string }> }) => {
                   Connecting with Server...
                 </>
               ) : (
-                "Extract the Data"
+                "Connect With Server"
               )}
             </Button>
           </div>

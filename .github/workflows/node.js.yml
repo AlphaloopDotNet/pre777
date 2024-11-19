@@ -36,8 +36,7 @@ jobs:
       - run: npm run build --if-present
 
       - name: Restart App with pm2 and Pass Environment Variables
-        run: pm2 restart 0 --update-env
-    
+        run: pm2 restart 0 
         env:
           KINDE_CLIENT_ID: ${{ secrets.KINDE_CLIENT_ID }}
           KINDE_CLIENT_SECRET: ${{ secrets.KINDE_CLIENT_SECRET }}
